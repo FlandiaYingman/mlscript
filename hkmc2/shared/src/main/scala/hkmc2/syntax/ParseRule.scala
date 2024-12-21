@@ -302,6 +302,7 @@ class ParseRules(using State):
     modified(`throw`),
     modified(`import`), // TODO improve – only allow strings
     // modified(`type`),
+    modified(`using`),
     singleKw(`true`)(BoolLit(true)),
     singleKw(`false`)(BoolLit(false)),
     singleKw(`undefined`)(UnitLit(false)),
