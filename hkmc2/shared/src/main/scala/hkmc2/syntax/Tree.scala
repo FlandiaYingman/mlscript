@@ -194,7 +194,7 @@ enum Tree extends AutoLocated:
       case inner: InfixApp => inner.asParam
       // Param of form (using ..., Type). Synthesize an identifier for it.
       // TODO: Synthesize a better name.
-      case _ => S(N, Ident(inner.showDbg), S(inner))
+      case _ => S(N, Ident(inner.showDbg.replaceAll("\\W", "_")), S(inner))
   
   def isModuleModifier: Bool = this match
     case Tree.TypeDef(Mod, _, N, N) => true
@@ -299,7 +299,7 @@ trait TypeOrTermDef:
       // use Foo = ...
       case typ if k == Ins =>
         // TODO: Synthesize a better name.
-        val name = typ.showDbg
+        val name = typ.showDbg.replaceAll("\\W", "_")
         val id: Ident = Ident(s"instance$$$name")
         (S(R(id)), R(id), Nil, N, S(typ))
       

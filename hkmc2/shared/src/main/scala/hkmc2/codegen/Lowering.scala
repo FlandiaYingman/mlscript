@@ -82,6 +82,14 @@ class Lowering(using TL, Raise, Elaborator.State):
             case sem.Fld(flags, value, asc) =>
               TODO("Other argument forms")
             case spd: Spd => true -> spd.term
+            case ca: sem.CtxArg => ca.term match
+              case S(t) => 
+                false -> t
+              case N => 
+                // All contextual arguments should have been
+                // populated by implicit resolution before lowering.
+                // Fail silently.
+                false -> Term.Error
           val l = new TempSymbol(S(t))
             def rec(as: Ls[Bool -> st], asr: Ls[Arg]): Block = as match
               case Nil => k(Call(fr, asr.reverse)(isMlsFun))
@@ -103,6 +111,7 @@ class Lowering(using TL, Raise, Elaborator.State):
         subTerm(prefix): p =>
           conclude(Select(p, nme)(sel.sym))
       case _ => subTerm(f)(conclude)
+    case st.TyApp(lhs, _) => term(lhs)(k)
     case st.Blk(Nil, res) => term(res)(k)
     case st.Blk(Lit(Tree.UnitLit(true)) :: stats, res) =>
       subTerm(st.Blk(stats, res))(k)
@@ -131,6 +140,12 @@ class Lowering(using TL, Raise, Elaborator.State):
             val (paramLists, bodyBlock) = setupFunctionDef(td.params, bod, S(td.sym.nme))
             Define(FunDefn(td.sym, paramLists, bodyBlock),
               term(st.Blk(stats, res))(k))
+          case syntax.Ins =>
+            // Implciit instances are not parameterized for now.
+            assert(td.params.isEmpty)
+            subTerm(bod)(r =>
+              Define(ValDefn(td.owner, syntax.ImmutVal, td.sym, r),
+                term(st.Blk(stats, res))(k)))
       // case cls: ClassDef =>
       case cls: ClassLikeDef =>
         reportAnnotations(cls, cls.annotations)

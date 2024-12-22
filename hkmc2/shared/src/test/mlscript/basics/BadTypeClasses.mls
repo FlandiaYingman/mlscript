@@ -1,0 +1,49 @@
+
+:e
+module M with
+  fun f(foo: Int, using bar: Int)
+//│ ╔══[ERROR] Keyword `using` must occur before all parameters.
+//│ ║  l.4: 	  fun f(foo: Int, using bar: Int)
+//│ ╙──     	                        ^^^^^^^^
+
+module M with
+  fun f(using Int)
+
+:e
+M.f
+//│ ╔══[ERROR] Missing instance for contextual parameter Ident_Int_: globalThis:import#Prelude#666(.)Int‹member:Int›
+//│ ║  l.10: 	  fun f(using Int)
+//│ ║        	              ^^^
+//│ ╟── Required by module method application at: 
+//│ ║  l.13: 	M.f
+//│ ║        	^^^
+//│ ╙── Expected: Sym(class:Int); Available: Map()
+
+:e
+use 42 = 42
+//│ ╔══[ERROR] Expected a type symbol, got 42
+//│ ║  l.23: 	use 42 = 42
+//│ ╙──      	    ^^
+
+val someInt = 42
+
+:e
+use someInt = 42
+//│ ╔══[ERROR] Expected a type, got globalThis:block#5#666(.)someInt‹member:someInt›
+//│ ║  l.31: 	use someInt = 42
+//│ ╙──      	    ^^^^^^^
+
+module M with
+  fun bar[A, B](a: A, b: B) = a + b
+
+:e
+M.bar[](1, 2)
+//│ ╔══[ERROR] Expected 2 type arguments, got 0
+//│ ║  l.40: 	M.bar[](1, 2)
+//│ ╙──      	^^^^^
+
+:e
+M.bar[Int](1, 2)
+//│ ╔══[ERROR] Expected 2 type arguments, got 1
+//│ ║  l.46: 	M.bar[Int](1, 2)
+//│ ╙──      	^^^^^

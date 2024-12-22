@@ -420,13 +420,13 @@ class BBTyper(using elState: Elaborator.State, tl: TL, scope: Scope):
             effBuff += eff
             ctx += sym -> rhsTy
             goStats(stats)
-          case TermDefinition(_, Fun, sym, ps :: Nil, sig, Some(body), _, _, _) :: stats =>
+          case TermDefinition(_, Fun, sym, ps :: Nil, _, sig, Some(body), _, _, _) :: stats =>
             typeFunDef(sym, Term.Lam(ps, body), sig, ctx)
             goStats(stats)
-          case TermDefinition(_, Fun, sym, Nil, sig, Some(body), _, _, _) :: stats =>
+          case TermDefinition(_, Fun, sym, Nil, _, sig, Some(body), _, _, _) :: stats =>
             typeFunDef(sym, body, sig, ctx)  // * may be a case expressions
             goStats(stats)
-          case TermDefinition(_, Fun, sym, _, S(sig), None, _, _, _) :: stats =>
+          case TermDefinition(_, Fun, sym, _, _, S(sig), None, _, _, _) :: stats =>
             ctx += sym -> typeType(sig)
             goStats(stats)
           case (clsDef: ClassDef) :: stats =>
