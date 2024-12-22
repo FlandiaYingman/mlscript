@@ -366,6 +366,15 @@ object PlainFld:
 final case class Spd(eager: Bool, term: Term) extends Elem:
   def showDbg: Str = (if eager then "..." else "..") + term.showDbg
 
+/** 
+ * Context arguments. 
+ * 
+ * Placeholders represents a nil term by default; 
+ * to be populated (resolved) by the implicit resolver later to represent some concrete term.
+ */
+abstract class CtxArg extends Elem:
+  def term: Opt[Term]
+  def showDbg: Str = s"‹using› ${term.fold("‹unpopulated›")(_.showDbg)}"
 
 final case class TyParam(flags: FldFlags, vce: Opt[Bool], sym: VarSymbol) extends Declaration:
   

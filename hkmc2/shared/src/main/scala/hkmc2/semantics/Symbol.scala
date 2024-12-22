@@ -47,6 +47,10 @@ abstract class Symbol(using State) extends Located:
     (asCls: Opt[ClassSymbol | ModuleSymbol | PatternSymbol]) orElse asMod orElse asPat
   def asTpe: Opt[TypeSymbol] = asCls orElse asAls
   
+  def asBlkMember: Opt[BlockMemberSymbol] = this match
+    case mem: BlockMemberSymbol => S(mem)
+    case _ => N
+  
   override def equals(x: Any): Bool = x match
     case that: Symbol => uid === that.uid
     case _ => false
