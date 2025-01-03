@@ -66,8 +66,9 @@ class MLsCompiler(preludeFile: os.Path):
     val (pblk, newCtx) = elab.importFrom(preludeParse.resultBlk)(using initState)
     
     newCtx.nest(N).givenIn:
+      val elab = Elaborator(etl, wd, newCtx)
       
-      val (blk, newCtx) = elab.importFrom(mainParse.resultBlk)
+      val (blk, _) = elab.importFrom(mainParse.resultBlk)
       val low = ltl.givenIn:
         codegen.Lowering()
       val jsb = codegen.js.JSBuilder()

@@ -10,6 +10,7 @@ final case class QuantVar(sym: VarSymbol, ub: Opt[Term], lb: Opt[Term])
 
 enum Term extends Statement:
   case Error
+  case Missing
   case Lit(lit: Literal)
   case Builtin(id: Tree.Ident, nme: Str)
   case Ref(sym: Symbol)(val tree: Tree.Ident, val refNum: Int)

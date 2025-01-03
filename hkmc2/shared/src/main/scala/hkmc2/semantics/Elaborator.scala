@@ -38,7 +38,8 @@ object Elaborator:
 
   val reservedNames = binaryOps.toSet ++ aliasOps.keySet + "NaN" + "Infinity"
   
-  case class Ctx(outer: Opt[InnerSymbol], parent: Opt[Ctx], env: Map[Str, Ctx.Elem]):
+  case class Ctx(outer: Opt[InnerSymbol], parent: Opt[Ctx], env: Map[Str, Ctx.Elem], 
+    mode: Mode = Mode.Full):
     
     def +(local: Str -> Symbol): Ctx = copy(outer, env = env + local.mapSecond(Ctx.RefElem(_)))
     def ++(locals: IterableOnce[Str -> Symbol]): Ctx =
@@ -118,6 +119,10 @@ object Elaborator:
       def symbol: Opt[Symbol] = base.symbol
     given Conversion[Symbol, Elem] = RefElem(_)
     val empty: Ctx = Ctx(N, N, Map.empty)
+    
+  enum Mode:
+    case Full
+    case Light
   
   type Ctxl[A] = Ctx ?=> A
   
@@ -147,7 +152,7 @@ end Elaborator
 import Elaborator.*
 
 
-class Elaborator(val tl: TraceLogger, val wd: os.Path)
+class Elaborator(val tl: TraceLogger, val wd: os.Path, val prelude: Ctx = Ctx.empty)
 (using val raise: Raise, val state: State)
 extends Importer:
   import tl.*
@@ -801,7 +806,9 @@ extends Importer:
               // * Elaborate signature
               val st = td.annotatedResultType.orElse(newSignatureTrees.get(id.name))
               val s = st.map(term(_)(using newCtx))
-              val b = rhs.map(term(_)(using newCtx))
+              val b = if ctx.mode != Mode.Light
+                then rhs.map(term(_)(using newCtx))
+                else S(Term.Missing)
               val r = FlowSymbol(s"‹result of ${sym}›")
               val real_pss =
                 // * Local functions (i.e. those without owner) with no parameter lists
@@ -1046,6 +1053,9 @@ extends Importer:
     // TODO handle name clashes
     (res, newCtx)
   
+  def importPreludeFrom(sts: Tree.Block)(using Ctx): Ctx =
+    val (_, newCtx) = importFrom(sts)
+    newCtx
   
   def topLevel(sts: Tree.Block)(using c: Ctx): (Term.Blk, Ctx) =
     val (res, ctx) = block(sts)

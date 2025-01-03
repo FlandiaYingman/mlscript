@@ -1,7 +1,61 @@
 :todo
 :ucs normalized
 
+//│ Normalized:
+//│ >  if
+//│ >    let $scrut = builtin:>#1(functionName#666.length, 0)
+//│ >    $scrut is true then builtin:+#1(builtin:+#2(" '", functionName#666), "'")
+//│ >    else ""
+//│ Normalized:
+//│ >  if
+//│ >    let $scrut = builtin:||#0(builtin:<#0(got#666, expected#666), builtin:&&#0(isUB#666, builtin:>#0(got#666, expected#666)))
+//│ >    $scrut is true then { let name; name = if { let $scrut = builtin:>#1(functionName#666.length, 0); scrut is true -> { else builtin:+#1(builtin:+#2(" '", functionName#666), "'") }; else "" }; throw globalThis:globalThis#666.Error(builtin:+#3(builtin:+#4(builtin:+#5(builtin:+#6(builtin:+#7("Function", name#666), " expected "), expected#666), " arguments but got "), got#666)) }
+//│ >    else null
+//│ Normalized:
+//│ >  if
+//│ >    let $scrut = module:TraceLogger#666(.)enabled‹member:enabled›
+//│ >    $scrut is true then { let prev; prev = module:TraceLogger#666(.)indentLvl‹member:indentLvl›; module:TraceLogger#666(.)indentLvl‹member:indentLvl› := builtin:+#8(prev#666, 1); prev#666 }
+//│ >    else null
+//│ Normalized:
+//│ >  if
+//│ >    let $scrut = module:TraceLogger#666(.)enabled‹member:enabled›
+//│ >    $scrut is true then module:TraceLogger#666(.)indentLvl‹member:indentLvl› := n#666
+//│ >    else null
+//│ Normalized:
+//│ >  if
+//│ >    let $scrut = module:TraceLogger#666(.)enabled‹member:enabled›
+//│ >    $scrut is true then globalThis:import#Prelude#666(.)console‹member:console›.log(builtin:+#9("| ".repeat(module:TraceLogger#666(.)indentLvl‹member:indentLvl›), msg#666.replaceAll("\n", builtin:+#10("\n", "  ".repeat(module:TraceLogger#666(.)indentLvl‹member:indentLvl›)))))
+//│ >    else null
 import "../../../mlscript-compile/Option.mls"
+//│ Normalized:
+//│ >  if
+//│ >    let $scrut = builtin:>#3(functionName#666.length, 0)
+//│ >    $scrut is true then builtin:+#12(builtin:+#13(" '", functionName#666), "'")
+//│ >    else ""
+//│ Normalized:
+//│ >  if
+//│ >    let $scrut = builtin:||#1(builtin:<#1(got#666, expected#666), builtin:&&#1(isUB#666, builtin:>#2(got#666, expected#666)))
+//│ >    $scrut is true then { let name; name = if { let $scrut = builtin:>#3(functionName#666.length, 0); scrut is true -> { else builtin:+#12(builtin:+#13(" '", functionName#666), "'") }; else "" }; throw globalThis:globalThis#666.Error(builtin:+#14(builtin:+#15(builtin:+#16(builtin:+#17(builtin:+#18("Function", name#666), " expected "), expected#666), " arguments but got "), got#666)) }
+//│ >    else null
+//│ Normalized:
+//│ >  if
+//│ >    let $scrut = module:TraceLogger#666(.)enabled‹member:enabled›
+//│ >    $scrut is true then { let prev; prev = module:TraceLogger#666(.)indentLvl‹member:indentLvl›; module:TraceLogger#666(.)indentLvl‹member:indentLvl› := builtin:+#19(prev#666, 1); prev#666 }
+//│ >    else null
+//│ Normalized:
+//│ >  if
+//│ >    let $scrut = module:TraceLogger#666(.)enabled‹member:enabled›
+//│ >    $scrut is true then module:TraceLogger#666(.)indentLvl‹member:indentLvl› := n#666
+//│ >    else null
+//│ Normalized:
+//│ >  if
+//│ >    let $scrut = module:TraceLogger#666(.)enabled‹member:enabled›
+//│ >    $scrut is true then globalThis:import#Prelude#666(.)console‹member:console›.log(builtin:+#20("| ".repeat(module:TraceLogger#666(.)indentLvl‹member:indentLvl›), msg#666.replaceAll("\n", builtin:+#21("\n", "  ".repeat(module:TraceLogger#666(.)indentLvl‹member:indentLvl›)))))
+//│ >    else null
+//│ Normalized:
+//│ >  if
+//│ >    x is Some then true
+//│ >    x is None then false
 
 open Option
 
@@ -9,10 +63,10 @@ open Option
 x => if x is
   refined(None) then x
 //│ ╔══[ERROR] Name not found: refined
-//│ ║  l.10: 	  refined(None) then x
+//│ ║  l.64: 	  refined(None) then x
 //│ ╙──      	  ^^^^^^^
 //│ ╔══[ERROR] Cannot use this identifier as an extractor
-//│ ║  l.10: 	  refined(None) then x
+//│ ║  l.64: 	  refined(None) then x
 //│ ╙──      	  ^^^^^^^
 //│ Normalized:
 //│ >  if
@@ -21,10 +75,10 @@ x => if x is
 x => if x is
   refined(Some) then x
 //│ ╔══[ERROR] Name not found: refined
-//│ ║  l.22: 	  refined(Some) then x
+//│ ║  l.76: 	  refined(Some) then x
 //│ ╙──      	  ^^^^^^^
 //│ ╔══[ERROR] Cannot use this identifier as an extractor
-//│ ║  l.22: 	  refined(Some) then x
+//│ ║  l.76: 	  refined(Some) then x
 //│ ╙──      	  ^^^^^^^
 //│ Normalized:
 //│ >  if
@@ -34,10 +88,10 @@ x => if x is
   refined(None) then x
   Some then x
 //│ ╔══[ERROR] Name not found: refined
-//│ ║  l.34: 	  refined(None) then x
+//│ ║  l.88: 	  refined(None) then x
 //│ ╙──      	  ^^^^^^^
 //│ ╔══[ERROR] Cannot use this identifier as an extractor
-//│ ║  l.34: 	  refined(None) then x
+//│ ║  l.88: 	  refined(None) then x
 //│ ╙──      	  ^^^^^^^
 //│ Normalized:
 //│ >  if x is Some then x#666
@@ -46,16 +100,16 @@ x => if x is
   refined(None) then x
   refined(Some) then x
 //│ ╔══[ERROR] Name not found: refined
-//│ ║  l.47: 	  refined(Some) then x
-//│ ╙──      	  ^^^^^^^
+//│ ║  l.101: 	  refined(Some) then x
+//│ ╙──       	  ^^^^^^^
 //│ ╔══[ERROR] Cannot use this identifier as an extractor
-//│ ║  l.47: 	  refined(Some) then x
-//│ ╙──      	  ^^^^^^^
+//│ ║  l.101: 	  refined(Some) then x
+//│ ╙──       	  ^^^^^^^
 //│ ╔══[ERROR] Name not found: refined
-//│ ║  l.46: 	  refined(None) then x
-//│ ╙──      	  ^^^^^^^
+//│ ║  l.100: 	  refined(None) then x
+//│ ╙──       	  ^^^^^^^
 //│ ╔══[ERROR] Cannot use this identifier as an extractor
-//│ ║  l.46: 	  refined(None) then x
-//│ ╙──      	  ^^^^^^^
+//│ ║  l.100: 	  refined(None) then x
+//│ ╙──       	  ^^^^^^^
 //│ Normalized:
 //│ >  if

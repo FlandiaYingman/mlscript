@@ -81,9 +81,13 @@ abstract class MLsDiffMaker extends DiffMaker:
   var curCtx = Elaborator.State.init
   var curICtx = ImplicitResolver.ICtx.empty
   
+  var prelude = Elaborator.Ctx.empty
+  
   override def run(): Unit =
-    if file =/= preludeFile then importFile(preludeFile, verbose = false)
+    // if file =/= preludeFile then 
+    importFile(preludeFile, verbose = false)
     curCtx = curCtx.nest(N)
+    prelude = curCtx
     super.run()
   
   
@@ -182,7 +186,7 @@ abstract class MLsDiffMaker extends DiffMaker:
   private var blockNum = 0
   
   def processTrees(trees: Ls[syntax.Tree])(using Raise): Unit =
-    val elab = Elaborator(etl, file / os.up)
+    val elab = Elaborator(etl, file / os.up, prelude)
     val blockSymbol =
       semantics.TopLevelSymbol("block#"+blockNum)
     blockNum += 1
